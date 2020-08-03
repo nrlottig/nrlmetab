@@ -8,7 +8,8 @@ trim.outliers <- function(data,width=7,sd.dev=2.5) {
     names(data)[1] <- "datetime"
     data.name <- names(data)[2]
     names(data)[2] <- "data.obs"
-    data <- data %>% mutate(doy = yday(datetime),year=year(datetime))
+    data <- data %>% mutate(doy = yday(datetime),year=year(datetime)) %>%
+        drop_na()
     sds <- data %>%
         group_by(year,doy) %>%
         summarise(sd_data = sd(data.obs,na.rm=TRUE)) %>%
@@ -25,7 +26,7 @@ trim.outliers <- function(data,width=7,sd.dev=2.5) {
 dat_clean = data %>%
         left_join(sds) %>%
         group_by(year,doy) %>%
-        mutate(data.obs = ifelse(abs(data.obs - mean(data.obs, na.rm=T)) < 2.5*avg_sd,data.obs,NA)) %>%
+        mutate(data.obs = ifelse(abs(data.obs - mean(data.obs, na.rm=T)) < sd.dev*avg_sd,data.obs,NA)) %>%
         ungroup() %>%
         select(datetime,data.obs)
 names(dat_clean)[2] = data.name
