@@ -7,9 +7,9 @@ aggregate.data <- function(data,time.step=60) {
                    to=ceiling_date(max(data$datetime),unit="hour"),
                    by="1 min"))
     data <- datetime_matrix %>% left_join(data)
-    if((time.step %% 2) == 0) time.step <- time.step + 1
+    if((time.step %% 2) == 0) time.step.roll <- time.step + 1 else time.step.roll <- time.step
     data <- data %>% mutate(data.avg = zoo::rollapply(data.obs,
-                                      width=time.step,
+                                      width=time.step.roll,
                                       partial=TRUE,
                                       fill=NA,
                                       align="center",
