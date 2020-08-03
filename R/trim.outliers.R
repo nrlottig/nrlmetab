@@ -1,4 +1,10 @@
-trim.outliers <- function(data,width=3,sd.dev=2.5) {
+trim.outliers <- function(data,width=7,sd.dev=2.5) {
+    #data is two column data.frame
+        #column one is datetime
+        #column two is data
+        #width: number of days to smooth data variance
+        #sd.dev: number of standard deviations to compare value when
+        #deterimining if it is an outlier on any given day
     names(data)[1] <- "datetime"
     data.name <- names(data)[2]
     names(data)[2] <- "data.obs"
